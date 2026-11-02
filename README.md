@@ -33,8 +33,8 @@ O cerință nu se consideră îndeplinită dacă este realizată doar prin cod g
 
 ### Tema 0
 
-- [ ] Nume proiect (poate fi schimbat ulterior)
-- [ ] Scurtă descriere a temei alese, ce v-ați propus să implementați
+- [ x] Car rental
+- [x ] Sistem de gestiune a unei agentii de inchirieri auto,modelate prin clasele: client,vehicul,contract si agentie(management flota si evidenta contractelor).
 
 ## Tema 1
 
