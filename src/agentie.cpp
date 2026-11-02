@@ -88,7 +88,7 @@ std::vector<client> agentie::incarca_clienti_din_fisier(const std::string& cale_
     return lista;
 }
 
-bool agentie::incheie_contract(client& client_curent, const std::string& model_vehicul, int zile, int id_nou) {
+bool agentie::incheie_contract(const client& client_curent, const std::string& model_vehicul, int zile, int id_nou) {
     if (!client_curent.este_client_eligibil()) {
         return false;
     }

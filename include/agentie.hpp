@@ -33,7 +33,7 @@ public:
     bool incarca_flota_din_fisier(const std::string& cale_fisier);
     static std::vector<client> incarca_clienti_din_fisier(const std::string& cale_fisier);
 
-    bool incheie_contract(client& client_curent, const std::string& model_vehicul, int zile, int id_nou);
+    bool incheie_contract(const client& client_curent, const std::string& model_vehicul, int zile, int id_nou);
     bool finalizeaza_contract(int id_contract, int km_la_final, double combustibil_lipsa, int nota_client);
 
     double efectueaza_mentenanta_generala();

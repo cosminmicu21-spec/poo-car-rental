@@ -1,6 +1,6 @@
 #include "client.hpp"
 
-bool client::verifica_cnp_valid(const std::string& cnp_verificat) const {
+bool client::verifica_cnp_valid(const std::string& cnp_verificat) {
     if (cnp_verificat.length() != 13) {
         return false;
     }

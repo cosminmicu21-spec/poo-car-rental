@@ -12,7 +12,7 @@ private:
     int nr_calificative;
     int* calificative;
 
-    bool verifica_cnp_valid(const std::string& cnp_verificat) const;
+   static bool verifica_cnp_valid(const std::string& cnp_verificat);
     void copiaza_calificative(const int* sursa, int dimensiune);
 
 public:

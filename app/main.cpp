@@ -5,7 +5,39 @@
 #include "contract.hpp"
 #include "agentie.hpp"
 
+void apeleaza_toate_metodele() {
+    vehicul v_demo;
+    (void)v_demo.get_marca();
+    (void)v_demo.get_km_ultima_revizie();
+    (void)v_demo.get_tarif_pe_zi();
+    (void)v_demo.get_consum_mediu();
+    (void)v_demo.get_stare();
+
+    client c_demo("Ion Popescu", "1990101123456", 5, nullptr, 0);
+    (void)c_demo.getCnp();
+    (void)c_demo.get_cnp();
+    (void)c_demo.get_ani_permis();
+    (void)c_demo.get_nr_calificative();
+
+    contract ct_demo;
+    (void)ct_demo.get_client();
+    (void)ct_demo.get_nr_zile();
+    (void)ct_demo.get_km_la_predare();
+    (void)ct_demo.get_km_la_restituire();
+    (void)ct_demo.get_garantie_blocata();
+    (void)ct_demo.este_activ();
+    ct_demo.adauga_penalizare(50.0);
+    
+    agentie ag_demo;
+    (void)ag_demo.get_denumire();
+    (void)ag_demo.get_capital_financiar();
+    (void)ag_demo.get_nr_contracte_active();
+    (void)ag_demo.get_nr_istoric_contracte();
+}
+
 int main() {
+    apeleaza_toate_metodele();
+    
     std::string nume_agentie;
     double capital_initial = 0.0;
 
