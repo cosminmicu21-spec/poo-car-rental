@@ -1,0 +1,6 @@
+dacia logan 2021 48500 130.0 6.2
+volkswagen golf 2020 89200 210.0 5.8
+ford focus 2019 114000 185.0 6.5
+skoda octavia 2022 29400 250.0 5.4
+renault clio 2018 142000 140.0 6.0
+toyota corolla 2023 12000 290.0 4.9

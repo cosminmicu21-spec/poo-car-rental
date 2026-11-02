@@ -1,0 +1,42 @@
+{
+	"selected_config":	"Debug",
+	"configs":	[{
+			"name":	"Debug",
+			"flags":	0,
+			"compile_flags":	[],
+			"executable":	"",
+			"arguments":	"",
+			"environment":	"",
+			"compiler":	"",
+			"remoteFolder":	"",
+			"remoteAccount":	"",
+			"workingDirectory":	"",
+			"debuggerPath":	"",
+			"debuggerCommands":	"",
+			"debuggerRemoteEnabled":	false,
+			"debuggerRemoteExtended":	true,
+			"debuggerRemoteHost":	"localhost",
+			"debuggerRemotePort":	"2345",
+			"debuggerRemoteCommands":	"",
+			"last_executables":	[]
+		}, {
+			"name":	"Release",
+			"flags":	0,
+			"compile_flags":	[],
+			"executable":	"",
+			"arguments":	"",
+			"environment":	"",
+			"compiler":	"",
+			"remoteFolder":	"",
+			"remoteAccount":	"",
+			"workingDirectory":	"",
+			"debuggerPath":	"",
+			"debuggerCommands":	"",
+			"debuggerRemoteEnabled":	false,
+			"debuggerRemoteExtended":	true,
+			"debuggerRemoteHost":	"localhost",
+			"debuggerRemotePort":	"2345",
+			"debuggerRemoteCommands":	"",
+			"last_executables":	[]
+		}]
+}
