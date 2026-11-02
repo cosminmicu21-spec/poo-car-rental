@@ -44,5 +44,4 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const agentie& a);
 };
 
-#include "../src/agentie.cpp"
 #endif

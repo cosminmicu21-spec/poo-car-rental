@@ -52,5 +52,4 @@ public:
     friend std::istream& operator>>(std::istream& is, vehicul& v);
 };
 
-#include "../src/vehicul.cpp"
 #endif

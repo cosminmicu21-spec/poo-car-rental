@@ -71,6 +71,10 @@ target_sources(${MAIN_LIBRARY_NAME}
     PRIVATE
         src/Example.cpp
         src/internal/Detail.cpp
+        src/vehicul.cpp
+        src/client.cpp
+        src/contract.cpp
+        src/agentie.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

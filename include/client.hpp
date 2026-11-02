@@ -43,5 +43,4 @@ public:
     friend std::istream& operator>>(std::istream& is, client& c);
 };
 
-#include "../src/client.cpp"
 #endif

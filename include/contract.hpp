@@ -44,5 +44,4 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const contract& c);
 };
 
-#include "../src/contract.cpp"
 #endif
