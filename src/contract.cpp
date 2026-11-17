@@ -123,6 +123,38 @@ double contract::proceseaza_restituire(int km_efectuati, double combustibil_lips
 double contract::calculeaza_cost_total_final() const {
     return cost_baza + penalizari;
 }
+bool contract::aplica_discount_promotional(const std::string& cod_promo) {
+    if (!activ || cost_baza <= 0.0) {
+        return false;
+    }
+    if (cod_promo == "WEEKEND10") {
+        cost_baza = cost_baza * 0.90;
+        return true;
+    }
+    if (cod_promo == "FIDEL15" && client_inchiriere.calculeaza_medie_calificative() >= 8.5) {
+        cost_baza = cost_baza * 0.85;
+        return true;
+    }
+    return false;
+}
+
+double contract::simuleaza_cost_intarziere(int zile_intarziere) const {
+    if (zile_intarziere <= 0) {
+        return 0.0;
+    }
+    double tarif_mediu_zi = cost_baza / nr_zile;
+    return zile_intarziere * tarif_mediu_zi * 1.35;
+}
+
+std::string contract::genereaza_rezumat_scurt() const {
+    std::string status = activ ? "ACTIV" : "INCHIS";
+    int km_parcursi = km_la_restituire - km_la_predare;
+    std::string rezumat = "Contract #" + std::to_string(id_contract) + " [" + status + "] - "
+                        + client_inchiriere.get_nume() + " | "
+                        + vehicul_inchiriat.get_marca() + " " + vehicul_inchiriat.get_model()
+                        + " | km rulati: " + std::to_string(km_parcursi);
+    return rezumat;
+}
 
 std::ostream& operator<<(std::ostream& os, const contract& c) {
     os << "=== contract #" << c.id_contract << " | stare: " << (c.activ ? "activ" : "finalizat") << " ===\n";

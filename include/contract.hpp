@@ -40,6 +40,9 @@ public:
     void adauga_penalizare(double suma);
     double proceseaza_restituire(int km_efectuati, double combustibil_lipsa_litru, int calificativ_client);
     double calculeaza_cost_total_final() const;
+    bool aplica_discount_promotional(const std::string& cod_promo);
+    double simuleaza_cost_intarziere(int zile_intarziere) const;
+    std::string genereaza_rezumat_scurt() const;
 
     friend std::ostream& operator<<(std::ostream& os, const contract& c);
 };

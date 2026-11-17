@@ -211,6 +211,54 @@ bool client::este_client_eligibil() const {
     return true;
 }
 
+std::string client::obtine_categorie_client() const {
+    double medie = calculeaza_medie_calificative();
+    if (ani_permis < 2) {
+        return "incepator";
+    }
+    if (medie >= 9.0 && nr_calificative >= 3 && ani_permis >= 5) {
+        return "vip";
+    }
+    if (medie >= 8.0 && nr_calificative >= 2) {
+        return "fidel";
+    }
+    return "standard";
+}
+
+int client::calculeaza_limita_km_bonus() const {
+    std::string categorie = obtine_categorie_client();
+    if (categorie == "vip") {
+        return 100;
+    }
+    if (categorie == "fidel") {
+        return 50;
+    }
+    return 0;
+}
+
+bool client::poate_inchiria_vehicul_premium(double valoare_vehicul) const {
+    if (!este_client_eligibil()) {
+        return false;
+    }
+    if (valoare_vehicul > 15000.0) {
+        if (ani_permis < 3 || calculeaza_medie_calificative() < 8.0) {
+            return false;
+        }
+    }
+    for (int i = 0; i < nr_calificative; ++i) {
+        if (calificative[i] < 6) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void client::afiseaza_profil_detaliat() const {
+    std::cout << "Profil client: " << nume
+              << " | Categorie: " << obtine_categorie_client()
+              << " | Reducere: " << calculeaza_procent_reducere() << "%"
+              << " | Bonus km/zi: +" << calculeaza_limita_km_bonus() << " km\n";
+}
 std::ostream& operator<<(std::ostream& os, const client& c) {
     os << "client: " << c.nume << " | cnp: " << c.cnp
        << " | experienta: " << c.ani_permis << " ani"

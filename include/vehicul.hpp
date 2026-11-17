@@ -47,6 +47,10 @@ public:
     double calculeaza_indice_uzura() const;
     double estimeaza_cost_carburant(int distanta_km, double pret_litru) const;
     double calculeaza_tarif_adaptat(int nr_zile) const;
+    double calculeaza_valoare_estimata_piata() const;
+    double calculeaza_cost_asigurare_casco(int ani_experienta_sofer) const;
+    bool este_eligibil_drum_lung(int distanta_km) const;
+    void afiseaza_fisa_tehnica() const;
 
     friend std::ostream& operator<<(std::ostream& os, const vehicul& v);
     friend std::istream& operator>>(std::istream& is, vehicul& v);

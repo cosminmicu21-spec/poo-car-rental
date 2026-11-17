@@ -215,6 +215,58 @@ double vehicul::calculeaza_tarif_adaptat(int nr_zile) const {
     return cost_total;
 }
 
+double vehicul::calculeaza_valoare_estimata_piata() const {
+    double valoare_initiala = tarif_pe_zi * 95.0;
+    int vechime = 2026 - an_fabricatie;
+    if (vechime < 0) {
+        vechime = 0;
+    }
+    double depreciere_ani = vechime * 0.065;
+    double depreciere_km = (kilometraj / 10000.0) * 0.015;
+    double factor_ramas = 1.0 - depreciere_ani - depreciere_km;
+    if (factor_ramas < 0.20) {
+        factor_ramas = 0.20;
+    }
+    return valoare_initiala * factor_ramas;
+}
+
+double vehicul::calculeaza_cost_asigurare_casco(int ani_experienta_sofer) const {
+    double valoare = calculeaza_valoare_estimata_piata();
+    double rata_baza = valoare * 0.0015;
+    if (rata_baza < 15.0) {
+        rata_baza = 15.0;
+    }
+    if (ani_experienta_sofer < 2) {
+        rata_baza *= 1.40;
+    } else if (ani_experienta_sofer >= 8) {
+        rata_baza *= 0.85;
+    }
+    if (calculeaza_indice_uzura() > 60.0) {
+        rata_baza *= 1.15;
+    }
+    return rata_baza;
+}
+
+bool vehicul::este_eligibil_drum_lung(int distanta_km) const {
+    if (!este_disponibil()) {
+        return false;
+    }
+    if (calculeaza_km_pana_la_revizie() < distanta_km + 500) {
+        return false;
+    }
+    if (calculeaza_indice_uzura() > 75.0) {
+        return false;
+    }
+    return true;
+}
+
+void vehicul::afiseaza_fisa_tehnica() const {
+    std::cout << "Fisa tehnica: " << marca << " " << model
+              << " | An: " << an_fabricatie
+              << " | Rulaj: " << kilometraj << " km"
+              << " | Uzura: " << calculeaza_indice_uzura() << "%"
+              << " | Valoare piata: " << calculeaza_valoare_estimata_piata() << " ron\n";
+}
 std::ostream& operator<<(std::ostream& os, const vehicul& v) {
     os << v.marca << " " << v.model << " (" << v.an_fabricatie << ") | "
        << v.kilometraj << " km | tarif: " << v.tarif_pe_zi << " ron/zi | stare: ";

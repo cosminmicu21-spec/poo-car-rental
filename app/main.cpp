@@ -37,7 +37,9 @@ int main() {
         std::cout << "3. Inchiriaza o masina (emite contract)\n";
         std::cout << "4. Returneaza o masina (inchide contract si calculeaza penalizari)\n";
         std::cout << "5. Verifica si efectueaza revizia tehnica in service\n";
-        std::cout << "6. Vezi contractele active si bilantul financiar\n";
+        std::cout << "6. Vezi contractele active, istoricul si bilantul financiar\n";
+        std::cout << "7. Cauta masini dupa buget si vezi raportul flotei\n";
+        std::cout << "8. Aplica cod promotional pe un contract activ (WEEKEND10 / FIDEL15)\n";
         std::cout << "0. Iesire\n";
         std::cout << "Alege optiunea: ";
 
@@ -99,27 +101,53 @@ int main() {
             std::cout << "Cost total achitat pentru revizii: " << cost << " ron\n";
         } else if (optiune == 6) {
             sediu.afiseaza_contracte_active();
+            sediu.afiseaza_istoric_contracte();
             std::cout << sediu;
+            std::cout << "Garantii blocate in contracte active: " << sediu.calculeaza_valoare_garantii_blocate() << " ron\n";
             std::cout << "Venituri totale inregistrate: " << sediu.calculeaza_venituri_totale() << " ron\n";
+        } else if (optiune == 7) {
+            double buget = 200.0;
+            std::cout << "Introdu bugetul maxim pe zi (ron): ";
+            if (std::cin >> buget) {
+                sediu.cauta_vehicule_dupa_buget(buget);
+                sediu.afiseaza_raport_statistic_flota();
+            }
+        } else if (optiune == 8) {
+            int id_ctr = 0;
+            std::string cod;
+            std::cout << "Introdu ID contract si codul promotional (WEEKEND10 sau FIDEL15): ";
+            if (std::cin >> id_ctr >> cod) {
+                if (sediu.aplica_promo_pe_contract(id_ctr, cod)) {
+                    std::cout << "Cod promotional aplicat cu succes pe contractul #" << id_ctr << "!\n";
+                } else {
+                    std::cout << "Cod invalid sau contractul nu este eligibil.\n";
+                }
+            }
         } else if (optiune != 0) {
             std::cout << "Optiune invalida. Incearca din nou.\n";
         }
     }
 
-    // Verificare tehnica a functionalitatilor si a Regulii celor 3 la inchiderea programului
     client c_copie(clienti[0]);
     c_copie = clienti[0];
     c_copie.adauga_calificativ(10);
     c_copie.set_nume(c_copie.get_nume());
     c_copie.set_ani_permis(c_copie.get_ani_permis());
+    c_copie.afiseaza_profil_detaliat();
 
     vehicul v_nou("dacia", "sandero", 2021, 50000, 150.0, 6.0);
     v_nou.set_tarif_pe_zi(160.0);
     v_nou.set_consum_mediu(6.2);
+    v_nou.afiseaza_fisa_tehnica();
+    std::cout << "Eligibil drum lung (800 km): " << (v_nou.este_eligibil_drum_lung(800) ? "da" : "nu")
+              << " | CASCO/zi: " << v_nou.calculeaza_cost_asigurare_casco(c_copie.get_ani_permis()) << " ron\n";
+    std::cout << "Eligibil vehicul premium: "
+              << (c_copie.poate_inchiria_vehicul_premium(v_nou.calculeaza_valoare_estimata_piata()) ? "da" : "nu") << "\n";
     sediu.adauga_vehicul_in_parc(v_nou);
 
     contract ctr_demo(999, c_copie, v_nou, 2);
     ctr_demo.adauga_penalizare(15.0);
+    std::cout << "Simulare intarziere 2 zile: " << ctr_demo.simuleaza_cost_intarziere(2) << " ron\n";
 
     std::cout << "\n--- rezumat final sistem ---\n";
     std::cout << "Client verificat: " << c_copie.get_nume() << " (CNP: " << c_copie.get_cnp()

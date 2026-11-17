@@ -56,11 +56,7 @@ void agentie::adauga_vehicul_in_parc(const vehicul& v) {
 bool agentie::incarca_flota_din_fisier(const std::string& cale_fisier) {
     std::ifstream fisier(cale_fisier);
     if (!fisier.is_open()) {
-        std::string rezerva = "../" + cale_fisier;
-        fisier.open(rezerva);
-        if (!fisier.is_open()) {
-            return false;
-        }
+        return false;
     }
     vehicul v;
     while (fisier >> v) {
@@ -74,11 +70,7 @@ std::vector<client> agentie::incarca_clienti_din_fisier(const std::string& cale_
     std::vector<client> lista;
     std::ifstream fisier(cale_fisier);
     if (!fisier.is_open()) {
-        std::string rezerva = "../" + cale_fisier;
-        fisier.open(rezerva);
-        if (!fisier.is_open()) {
-            return lista;
-        }
+        return lista;
     }
     client c;
     while (fisier >> c) {
@@ -224,6 +216,81 @@ void agentie::afiseaza_contracte_active() const {
     }
 }
 
+void agentie::cauta_vehicule_dupa_buget(double buget_maxim_zi) const {
+    std::cout << "\n--- vehicule disponibile sub " << buget_maxim_zi << " ron/zi ---\n";
+    int gasite = 0;
+    for (size_t i = 0; i < parc_auto.size(); ++i) {
+        if (parc_auto[i].este_disponibil() && parc_auto[i].get_tarif_pe_zi() <= buget_maxim_zi) {
+            std::cout << "- " << parc_auto[i] << "\n";
+            gasite++;
+        }
+    }
+    if (gasite == 0) {
+        std::cout << "niciun vehicul disponibil in acest buget.\n";
+    }
+}
+
+void agentie::afiseaza_raport_statistic_flota() const {
+    double valoare_totala = 0.0;
+    double suma_uzura = 0.0;
+    int disponibile = 0;
+    int inchiriate = 0;
+    int in_service = 0;
+
+    for (size_t i = 0; i < parc_auto.size(); ++i) {
+        valoare_totala += parc_auto[i].calculeaza_valoare_estimata_piata();
+        suma_uzura += parc_auto[i].calculeaza_indice_uzura();
+        if (parc_auto[i].get_stare() == 0 && !parc_auto[i].necesita_revizie()) {
+            disponibile++;
+        } else if (parc_auto[i].get_stare() == 1) {
+            inchiriate++;
+        } else {
+            in_service++;
+        }
+    }
+
+    double uzura_medie = parc_auto.empty() ? 0.0 : (suma_uzura / static_cast<double>(parc_auto.size()));
+    std::cout << "\n=== RAPORT STATISTIC FLOTA (" << denumire << ") ===\n";
+    std::cout << "Valoare estimata flota: " << valoare_totala << " ron\n";
+    std::cout << "Uzura medie parc auto: " << uzura_medie << "%\n";
+    std::cout << "Distributie: " << disponibile << " disponibile | "
+              << inchiriate << " inchiriate | " << in_service << " in service\n";
+}
+
+bool agentie::aplica_promo_pe_contract(int id_contract, const std::string& cod_promo) {
+    int idx = cauta_index_contract(id_contract);
+    if (idx == -1) {
+        return false;
+    }
+    size_t pos = static_cast<size_t>(idx);
+    double cost_vechi = contracte_active[pos].get_cost_baza();
+    if (contracte_active[pos].aplica_discount_promotional(cod_promo)) {
+        double diferenta = cost_vechi - contracte_active[pos].get_cost_baza();
+        capital_financiar -= diferenta;
+        return true;
+    }
+    return false;
+}
+
+void agentie::afiseaza_istoric_contracte() const {
+    std::cout << "\n--- istoric contracte arhivate ---\n";
+    if (istoric_contracte.empty()) {
+        std::cout << "nu exista contracte arhivate.\n";
+        return;
+    }
+    for (size_t i = 0; i < istoric_contracte.size(); ++i) {
+        std::cout << istoric_contracte[i].genereaza_rezumat_scurt()
+                  << " | total achitat: " << istoric_contracte[i].calculeaza_cost_total_final() << " ron\n";
+    }
+}
+
+double agentie::calculeaza_valoare_garantii_blocate() const {
+    double suma_garantii = 0.0;
+    for (size_t i = 0; i < contracte_active.size(); ++i) {
+        suma_garantii += contracte_active[i].get_garantie_blocata();
+    }
+    return suma_garantii;
+}
 std::ostream& operator<<(std::ostream& os, const agentie& a) {
     os << "agentie auto: " << a.denumire << " | capital: " << a.capital_financiar << " ron\n";
     os << "flota totala: " << a.parc_auto.size() << " masini | contracte active: " 

@@ -37,6 +37,10 @@ public:
     double calculeaza_coeficient_risc() const;
     double calculeaza_procent_reducere() const;
     bool este_client_eligibil() const;
+    std::string obtine_categorie_client() const;
+    int calculeaza_limita_km_bonus() const;
+    bool poate_inchiria_vehicul_premium(double valoare_vehicul) const;
+    void afiseaza_profil_detaliat() const;
 
     friend std::ostream& operator<<(std::ostream& os, const client& c);
     friend std::istream& operator>>(std::istream& is, client& c);

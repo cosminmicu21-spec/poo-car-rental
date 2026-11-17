@@ -43,6 +43,11 @@ public:
                                  int zile, int distanta_km, double pret_litru) const;
     void afiseaza_contracte_active() const;
     double calculeaza_venituri_totale() const;
+    void cauta_vehicule_dupa_buget(double buget_maxim_zi) const;
+    void afiseaza_raport_statistic_flota() const;
+    bool aplica_promo_pe_contract(int id_contract, const std::string& cod_promo);
+    void afiseaza_istoric_contracte() const;
+    double calculeaza_valoare_garantii_blocate() const;
 
     friend std::ostream& operator<<(std::ostream& os, const agentie& a);
 };
