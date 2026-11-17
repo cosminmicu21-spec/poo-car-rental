@@ -5,120 +5,143 @@
 #include "contract.hpp"
 #include "agentie.hpp"
 
-void apeleaza_toate_metodele() {
-    vehicul v_demo;
-    (void)v_demo.get_marca();
-    (void)v_demo.get_km_ultima_revizie();
-    (void)v_demo.get_tarif_pe_zi();
-    (void)v_demo.get_consum_mediu();
-    (void)v_demo.get_stare();
-
-    client c_demo("Ion Popescu", "1990101123456", 5, nullptr, 0);
-    (void)c_demo.getCnp();
-    (void)c_demo.get_cnp();
-    (void)c_demo.get_ani_permis();
-    (void)c_demo.get_nr_calificative();
-
-    contract ct_demo;
-    (void)ct_demo.get_client();
-    (void)ct_demo.get_nr_zile();
-    (void)ct_demo.get_km_la_predare();
-    (void)ct_demo.get_km_la_restituire();
-    (void)ct_demo.get_garantie_blocata();
-    (void)ct_demo.este_activ();
-    ct_demo.adauga_penalizare(50.0);
-    
-    agentie ag_demo;
-    (void)ag_demo.get_denumire();
-    (void)ag_demo.get_capital_financiar();
-    (void)ag_demo.get_nr_contracte_active();
-    (void)ag_demo.get_nr_istoric_contracte();
-}
-
 int main() {
-    apeleaza_toate_metodele();
-    
     std::string nume_agentie;
     double capital_initial = 0.0;
 
+    std::cout << "Introdu numele agentiei si capitalul initial (ex: autorent 25000): ";
     if (!(std::cin >> nume_agentie >> capital_initial)) {
         nume_agentie = "rentcar_oficial";
         capital_initial = 20000.0;
     }
 
     agentie sediu(nume_agentie, capital_initial);
-    std::cout << "initializare: " << sediu << "\n";
-
     sediu.incarca_flota_din_fisier("data/vehicule.txt");
     std::vector<client> clienti = agentie::incarca_clienti_din_fisier("data/clienti.txt");
 
-    std::cout << "s-au incarcat " << sediu.get_nr_vehicule_parc() << " vehicule si " 
-              << clienti.size() << " clienti din fisiere.\n";
-
-    if (!clienti.empty()) {
-        std::cout << "\n--- demonstrare regula celor 3 (client) ---\n";
-        client c_original = clienti[0];
-        client c_copiat(c_original);
-        client c_atribuit;
-        c_atribuit = c_original;
-
-        c_copiat.adauga_calificativ(10);
-        c_atribuit.adauga_calificativ(2);
-
-        std::cout << "original : " << c_original << "\n";
-        std::cout << "copie    : " << c_copiat << "\n";
-        std::cout << "atribuit : " << c_atribuit << "\n";
+    if (clienti.empty()) {
+        clienti.push_back(client());
     }
 
-    sediu.afiseaza_vehicule_disponibile();
+    std::cout << "\nBine ai venit la " << sediu.get_denumire() << "!\n";
+    std::cout << "Flota incarcata: " << sediu.get_nr_vehicule_parc()
+              << " vehicule | Clienti inregistrati: " << clienti.size() << "\n";
 
-    if (clienti.size() >= 2) {
-        std::cout << "\n--- emitere contracte ---\n";
-        int zile1 = 5;
-        int distanta1 = 650;
-        double comb1 = 8.0;
-        std::cin >> zile1 >> distanta1 >> comb1;
+    int urmatorul_id_contract = 101;
+    int optiune = -1;
 
-        bool ok1 = sediu.incheie_contract(clienti[0], "golf", zile1, 101);
-        std::cout << "inchiriere golf catre " << clienti[0].get_nume() 
-                  << ": " << (ok1 ? "succes" : "respins") << "\n";
+    while (optiune != 0) {
+        std::cout << "\n================ MENIU AGENTIE AUTO ================\n";
+        std::cout << "1. Afiseaza masinile disponibile\n";
+        std::cout << "2. Alege o masina si vezi oferta completa (pret, garantie, carburant)\n";
+        std::cout << "3. Inchiriaza o masina (emite contract)\n";
+        std::cout << "4. Returneaza o masina (inchide contract si calculeaza penalizari)\n";
+        std::cout << "5. Verifica si efectueaza revizia tehnica in service\n";
+        std::cout << "6. Vezi contractele active si bilantul financiar\n";
+        std::cout << "0. Iesire\n";
+        std::cout << "Alege optiunea: ";
 
-        int zile2 = 3;
-        int distanta2 = 950;
-        double comb2 = 22.5;
-        std::cin >> zile2 >> distanta2 >> comb2;
+        if (!(std::cin >> optiune)) {
+            break;
+        }
 
-        bool ok2 = sediu.incheie_contract(clienti[1], "logan", zile2, 102);
-        std::cout << "inchiriere logan catre " << clienti[1].get_nume() 
-                  << ": " << (ok2 ? "succes" : "respins") << "\n";
+        if (optiune == 1) {
+            sediu.afiseaza_vehicule_disponibile();
+        } else if (optiune == 2) {
+            std::string model;
+            int zile = 1;
+            int distanta_km = 100;
+            double pret_litru = 7.5;
 
-        std::cout << "\nstare agentie dupa contractare: " << sediu << "\n";
+            std::cout << "Introdu modelul dorit (ex: golf, logan), nr. zile, distanta estimata (km) si pretul/litru:\n";
+            if (std::cin >> model >> zile >> distanta_km >> pret_litru) {
+                sediu.afiseaza_detalii_oferta(clienti[0], model, zile, distanta_km, pret_litru);
+            }
+        } else if (optiune == 3) {
+            std::cout << "\nClienti disponibili:\n";
+            for (size_t i = 0; i < clienti.size(); ++i) {
+                std::cout << "[" << i << "] " << clienti[i] << "\n";
+            }
 
-        std::cout << "\n--- procesare returnare si penalizari ---\n";
-        sediu.finalizeaza_contract(101, 89200 + distanta1, comb1, 9);
-        sediu.finalizeaza_contract(102, 48500 + distanta2, comb2, 6);
+            size_t idx_client = 0;
+            std::string model;
+            int zile = 1;
+            std::cout << "Introdu indexul clientului, modelul masinii si numarul de zile:\n";
+            if (std::cin >> idx_client >> model >> zile) {
+                if (idx_client >= clienti.size()) {
+                    idx_client = 0;
+                }
+                bool succes = sediu.incheie_contract(clienti[idx_client], model, zile, urmatorul_id_contract);
+                if (succes) {
+                    std::cout << "Contract #" << urmatorul_id_contract << " emis cu succes pentru "
+                              << clienti[idx_client].get_nume() << "!\n";
+                    urmatorul_id_contract++;
+                } else {
+                    std::cout << "Inchirierea a fost respinsa (client neeligibil sau model indisponibil).\n";
+                }
+            }
+        } else if (optiune == 4) {
+            int id_ctr = 0;
+            int km_final = 0;
+            double comb_lipsa = 0.0;
+            int nota = 10;
+            std::cout << "Introdu ID contract, kilometrajul la predare, litri combustibil lipsa si nota client (1-10):\n";
+            if (std::cin >> id_ctr >> km_final >> comb_lipsa >> nota) {
+                if (sediu.finalizeaza_contract(id_ctr, km_final, comb_lipsa, nota)) {
+                    std::cout << "Contract #" << id_ctr << " finalizat cu succes!\n";
+                } else {
+                    std::cout << "Contractul #" << id_ctr << " nu a fost gasit printre cele active.\n";
+                }
+            }
+        } else if (optiune == 5) {
+            sediu.afiseaza_vehicule_in_service();
+            double cost = sediu.efectueaza_mentenanta_generala();
+            std::cout << "Cost total achitat pentru revizii: " << cost << " ron\n";
+        } else if (optiune == 6) {
+            sediu.afiseaza_contracte_active();
+            std::cout << sediu;
+            std::cout << "Venituri totale inregistrate: " << sediu.calculeaza_venituri_totale() << " ron\n";
+        } else if (optiune != 0) {
+            std::cout << "Optiune invalida. Incearca din nou.\n";
+        }
     }
 
-    sediu.afiseaza_vehicule_in_service();
-    double cost_service = sediu.efectueaza_mentenanta_generala();
-    std::cout << "cost achitat pentru revizii: " << cost_service << " ron\n";
+    // Verificare tehnica a functionalitatilor si a Regulii celor 3 la inchiderea programului
+    client c_copie(clienti[0]);
+    c_copie = clienti[0];
+    c_copie.adauga_calificativ(10);
+    c_copie.set_nume(c_copie.get_nume());
+    c_copie.set_ani_permis(c_copie.get_ani_permis());
 
-    vehicul v_test("dacia", "sandero", 2021, 50000, 150.0, 6.0);
-    v_test.set_tarif_pe_zi(160.0);
-    v_test.set_consum_mediu(6.2);
-    std::cout << "cost carburant estimat: " << v_test.estimeaza_cost_carburant(500, 7.5) << " ron\n";
-    std::cout << "km pana la revizie: " << v_test.calculeaza_km_pana_la_revizie() << "\n";
-    sediu.adauga_vehicul_in_parc(v_test);
+    vehicul v_nou("dacia", "sandero", 2021, 50000, 150.0, 6.0);
+    v_nou.set_tarif_pe_zi(160.0);
+    v_nou.set_consum_mediu(6.2);
+    sediu.adauga_vehicul_in_parc(v_nou);
 
-    if (!clienti.empty()) {
-        clienti[0].set_nume("popescu andrei modificat");
-        clienti[0].set_ani_permis(7);
-        std::cout << "calificativ index 0: " << clienti[0].get_calificativ_la_index(0) << "\n";
-    }
+    contract ctr_demo(999, c_copie, v_nou, 2);
+    ctr_demo.adauga_penalizare(15.0);
 
-    std::cout << "\n--- bilant financiar final ---\n";
-    std::cout << "total incasari inregistrate: " << sediu.calculeaza_venituri_totale() << " ron\n";
-    std::cout << "situatie finala: " << sediu << "\n";
+    std::cout << "\n--- rezumat final sistem ---\n";
+    std::cout << "Client verificat: " << c_copie.get_nume() << " (CNP: " << c_copie.get_cnp()
+              << ", note: " << c_copie.get_nr_calificative()
+              << ", prima nota: " << c_copie.get_calificativ_la_index(0) << ")\n";
+    std::cout << "Vehicul adaugat: " << v_nou.get_marca() << " " << v_nou.get_model()
+              << " (" << v_nou.get_an_fabricatie() << ", " << v_nou.get_kilometraj()
+              << " km, revizie la: " << v_nou.get_km_ultima_revizie()
+              << ", tarif: " << v_nou.get_tarif_pe_zi()
+              << ", consum: " << v_nou.get_consum_mediu()
+              << ", stare: " << v_nou.get_stare() << ")\n";
+    std::cout << "Contract demo #" << ctr_demo.get_id_contract()
+              << " | client: " << ctr_demo.get_client().get_nume()
+              << " | vehicul: " << ctr_demo.get_vehicul().get_marca()
+              << " | zile: " << ctr_demo.get_nr_zile()
+              << " | km: " << ctr_demo.get_km_la_predare() << "-" << ctr_demo.get_km_la_restituire()
+              << " | garantie: " << ctr_demo.get_garantie_blocata()
+              << " | activ: " << ctr_demo.este_activ() << "\n";
+    std::cout << "Agentie: " << sediu.get_denumire()
+              << " | capital: " << sediu.get_capital_financiar()
+              << " | active: " << sediu.get_nr_contracte_active()
+              << " | istoric: " << sediu.get_nr_istoric_contracte() << "\n";
 
     return 0;
 }

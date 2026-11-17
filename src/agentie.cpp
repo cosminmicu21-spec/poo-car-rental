@@ -184,6 +184,45 @@ double agentie::calculeaza_venituri_totale() const {
     }
     return total;
 }
+void agentie::afiseaza_detalii_oferta(const client& client_curent, const std::string& model_vehicul,
+                                      int zile, int distanta_km, double pret_litru) const {
+    int idx = cauta_index_vehicul_dupa_model(model_vehicul);
+    if (idx == -1) {
+        std::cout << "Modelul '" << model_vehicul << "' nu este disponibil momentan in parc.\n";
+        return;
+    }
+
+    const vehicul& v = parc_auto[static_cast<size_t>(idx)];
+    double tarif_adaptat = v.calculeaza_tarif_adaptat(zile);
+    double reducere = client_curent.calculeaza_procent_reducere();
+    double cost_inchiriere = tarif_adaptat * (1.0 - (reducere / 100.0));
+    double cost_carburant = v.estimeaza_cost_carburant(distanta_km, pret_litru);
+
+    contract previzualizare(0, client_curent, v, zile);
+
+    std::cout << "\n=== DETALII OFERTA PENTRU MODELUL: " << v.get_marca() << " " << v.get_model() << " ===\n";
+    std::cout << "Specificatii: an " << v.get_an_fabricatie()
+              << " | rulaj: " << v.get_kilometraj() << " km"
+              << " | uzura: " << v.calculeaza_indice_uzura() << "%"
+              << " | consum: " << v.get_consum_mediu() << " l/100km\n";
+    std::cout << "Client: " << client_curent.get_nume()
+              << " | reducere fidelitate: " << reducere << "%\n";
+    std::cout << "Cost inchiriere (" << zile << " zile): " << cost_inchiriere << " ron\n";
+    std::cout << "Garantie blocata (rambursabila): " << previzualizare.get_garantie_blocata() << " ron\n";
+    std::cout << "Cost carburant estimat (" << distanta_km << " km): " << cost_carburant << " ron\n";
+    std::cout << "Total estimat (inchiriere + carburant): " << (cost_inchiriere + cost_carburant) << " ron\n";
+}
+
+void agentie::afiseaza_contracte_active() const {
+    std::cout << "\n--- contracte active in derulare ---\n";
+    if (contracte_active.empty()) {
+        std::cout << "nu exista contracte active.\n";
+        return;
+    }
+    for (size_t i = 0; i < contracte_active.size(); ++i) {
+        std::cout << contracte_active[i] << "\n\n";
+    }
+}
 
 std::ostream& operator<<(std::ostream& os, const agentie& a) {
     os << "agentie auto: " << a.denumire << " | capital: " << a.capital_financiar << " ron\n";

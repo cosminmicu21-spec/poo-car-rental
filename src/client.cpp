@@ -90,10 +90,6 @@ const std::string& client::get_nume() const {
     return nume;
 }
 
-const std::string& client::getCnp() const {
-    return cnp;
-}
-
 const std::string& client::get_cnp() const {
     return cnp;
 }

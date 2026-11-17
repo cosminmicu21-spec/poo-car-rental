@@ -39,6 +39,9 @@ public:
     double efectueaza_mentenanta_generala();
     void afiseaza_vehicule_disponibile() const;
     void afiseaza_vehicule_in_service() const;
+    void afiseaza_detalii_oferta(const client& client_curent, const std::string& model_vehicul,
+                                 int zile, int distanta_km, double pret_litru) const;
+    void afiseaza_contracte_active() const;
     double calculeaza_venituri_totale() const;
 
     friend std::ostream& operator<<(std::ostream& os, const agentie& a);

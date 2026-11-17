@@ -25,7 +25,6 @@ public:
 
     const std::string& get_nume() const;
     const std::string& get_cnp() const;
-    const std::string& getCnp() const;
     int get_ani_permis() const;
     int get_nr_calificative() const;
     int get_calificativ_la_index(int index) const;
