@@ -1,4 +1,9 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+Titlu: Car Rental
+Descriere: Aplicația este un sistem de gestiune pentru o agenție de închirieri auto.
+Programul încarcă datele inițiale despre mașini și clienți din fișiere text (data/vehicule.txt și data/clienti.txt)
+și pune la dispoziție un meniu interactiv în consolă prin care utilizatorul poate verifica flota disponibilă,
+calcula oferte personalizate, închiria sau returna mașini, aplica coduri promoționale, efectua revizii tehnice
+și urmări situația financiară a agenției.
 
 ### Folosiți template-ul corespunzător grupei voastre!
 
@@ -51,7 +56,7 @@ O cerință nu se consideră îndeplinită dacă este realizată doar prin cod g
 - [ x] scenariu de utilizare **cu sens** a claselor definite:
   - crearea de obiecte și apelarea tuturor funcțiilor membru publice în main
   - vor fi adăugate în fișierul `tastatura.txt` DOAR exemple de date de intrare de la tastatură (dacă există) pentru a acoperi cât mai multe cazuri; dacă aveți nevoie de date din fișiere, creați alte fișiere separat
-- [ ] minim 52-60% din codul propriu să fie C++, adică să aveți mai mult cod decât ce e inclus în template; testele nu se pun, nu vă luați după procentajul din interfața web; detalii la ore
+- [ X] minim 52-60% din codul propriu să fie C++, adică să aveți mai mult cod decât ce e inclus în template; testele nu se pun, nu vă luați după procentajul din interfața web; detalii la ore
 - [x] `.gitattributes` configurat corect (nu trebuie făcute modificări aici)
 - [x ] tag de `git`: de exemplu `v0.1`
 - [ x] serviciu de integrare continuă (CI) cu **toate bifele**; exemplu: GitHub Actions
